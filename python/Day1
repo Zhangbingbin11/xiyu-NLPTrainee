@@ -38,7 +38,7 @@ ans = a.generateParenthesis(3)
 print(ans)
 
 # 1.3最长的有效括号
-"""思路：1.使用栈进行操作，如果是左括号，直接入stack，如果右括号，如果stack里没有元素匹对，
+"""思路1:使用栈进行操作，如果是左括号，直接入stack，如果右括号，如果stack里没有元素匹对，
 说明有效括号已经结束，更新起始位置，有元素匹对pop出一个左括号匹对，如果此时没了，不能保
 证不继续有效括号，所以根据当前的最长距离去更新maxlen，如果此时还有 则计算与栈顶的索引
 相减来计算长度。"""
@@ -128,7 +128,7 @@ def replaceSpace(s):
 s_res = replaceSpace("we are happy.")
 print(s_res)
 
-1.5Pandas基础
+#1.5Pandas基础
 pandas 遍历有以下三种方法
 .iterrows（）：在单独的变量中返回索引和行项目，但显着较慢
 .itertuples（）：快于.iterrows（），但将索引与行项目一起返回，ir [0]是索引
