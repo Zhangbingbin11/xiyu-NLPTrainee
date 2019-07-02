@@ -1,20 +1,3 @@
-#1.1有效的括号
-#思路：依次将这些字符入栈，判断栈顶元素与当前元素是否是对应上的，是则pop,不是则入栈，到最后判断栈是否为空
-def isValid(s):
-    """
-    :type s: str
-    :rtype: bool
-    """
-    stack = []
-    mapping = {")": "(", "}": "{", "]": "["}
-    for i in s:
-        if i in mapping and mapping[i] == stack[-1]: #判断栈顶元素与当前元素是否是对应上的
-            stack.pop()
-        else:
-            stack.append(i)
-    return  len(stack) == 0
-ans=isValid("(()()")
-print(ans)
 
 #1.1有效的括号
 #思路：依次将这些字符入栈，判断栈顶元素与当前元素是否是对应上的，是则pop,不是则入栈，到最后判断栈是否为空
