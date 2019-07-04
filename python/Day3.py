@@ -59,7 +59,44 @@ class Solution():
 if __name__ == "__main__":
     res = Solution().letterCombinations("25")
     print(res)
-
+    
+# 3.3 交错字符串
+# 给定三个字符串s1,s2,s3，验证s3是否是由s1和s2交错组成的。
+# 思路：（动态规划）
+# dp[i][j] 表示用 s1的前 (i+1)和 s2 的前 (j+1) 个字符，总共 (i+j+2)个字符，是否交错构成 s3的前缀。
+# 为了求出 dp[i][j]，我们需要考虑 2 种情况：
+# 1.当s1 的第 i个字符和 s2的第 j 个字符都不能匹配 s3的第 k个字符，其中 k=i+j 。
+# 这种情况下，s1 和 s2 的前缀无法交错形成 s3 长度为 k 的前缀。因此，我们让 dp[i][j] 为 False。
+# 2.当 s1 的第 i个字符或者 s2 的第 j 个字符可以匹配 s3的第 k 个字符，其中 k=i+j 。
+# 假设匹配的字符是 x且与 s1的第 i 个字符匹配，我们就需要把 x放在已经形成的交错字符串的最后一个位置。
+# 此时，为了我们必须确保 s1 的前 (i-1) 个字符和 s2 的前 j个字符能形成 s3的一个前缀。
+# 类似的，如果我们将 s2的第 j个字符与 s3的第 k 个字符匹配，我们需要确保 s1的前 i个字符和 s2的前 (j-1)个字符能形成 s3 的一个前缀，
+# 我们就让 dp[i][j] 为 True。
+class Solution(object):
+    def isInterleave(self, s1, s2, s3):
+        """
+        :type s1: str
+        :type s2: str
+        :type s3: str
+        :rtype: bool
+        """
+        if len(s1)+len(s2)!=len(s3):
+            return False
+        dp=[[False for i in range(len(s2)+1)] for j in range(len(s1)+1)]
+        dp[0][0]=True
+        for i in range(1, len(s1)+1):
+            dp[i][0] = dp[i-1][0] and s3[i-1]==s1[i-1]  # 边界：之前的需要符合 并且s1和s3对应位置相同
+        for i in range(1, len(s2)+1):
+            dp[0][i] = dp[0][i-1] and s3[i-1]==s2[i-1]  # 边界：之前的需要符合 并且s1和s3对应位置相同
+        for i in range(1, len(s1)+1):
+            for j in range(1, len(s2)+1):
+                # print i, j, s1[i-1], s3[i+j-1], s2[j-1], s3[i+j-1]
+                #          s1的第 i 个字符与s3的第 k 个匹配    或者   s2的第 j 个字符与s3的第 k 个匹配
+                dp[i][j] = (dp[i-1][j] and s1[i-1]==s3[i+j-1]) or (dp[i][j-1] and s2[j-1]==s3[i+j-1])
+        return dp[-1][-1]
+res = Solution().isInterleave("abc","def","adebfc")
+print(res)
+    
 #3.4 第一个只出现一次的字符
 #在一个字符串（1<=字符串长度<=10000,全部由字母组成）中找到第一个只出现一次的字符，并返回他的位置
 #思路：利用Counter函数给字符串中的字符计数，按字符串顺序遍历，取出 count==1 的字符
