@@ -9,7 +9,7 @@ class Solution(object):
         """
         if len(s) <=1:
             return 0
-        record =[index for index in range(-1,len(s)+1)]
+        record =[index for index in range(-1,len(s))]
         for r in range(1,len(s)+1):
             for l in range(r):
                 if s[l:r] ==s[l:r][::-1]:
