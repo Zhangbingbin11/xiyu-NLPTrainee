@@ -2,39 +2,8 @@
 # Time:2019/7/8
 # 5.1复原IP地址
 #给定一个只包含数字的字符串，复原它并返回所有可能的IP地址格式
-#思路：我们知道IP地址分为4个小段，每一段都是再0~255这个区间内（注意：第一小段不能为0）
-#有个细节：对于前三段做一样的处理（结尾加“.”）,而最后一段单独考虑，所以就成的边界条件之一。
-
-#方法一：（递归）
-class Solution:
-    def _restoreIpAddresses(self, s, n, index, ip, result):
-        if n == 0:
-            if index == len(s):
-                result.append(ip)
-            return
-        def isNum(num):
-            if 0 <= int(num) <= 255 and str(int(num)) == num:
-                return True
-            return False
-        for i in range(index + 1, len(s) + 1):
-            if isNum(s[index:i]):
-                self._restoreIpAddresses(s, n - 1, i, s[index:i] if ip == "" else ip + '.' + s[index:i], result)
-            else:
-                break
-
-    def restoreIpAddresses(self, s):
-        """
-        :type s: str
-        :rtype: List[str]
-        """
-        result = list()
-        if not s and 4 > len(s) > 12:
-            return result
-
-        self._restoreIpAddresses(s, 4, 0, "", result)
-        return result
-
-#方法二：（迭代）
+#思路：我们知道IP地址分为4个小段，每一段都是再0~255这个区间内并且 每一段的首数字不能为0（代码表示：str(int(num)) == num）
+#（迭代）
 class Solution:
     def restoreIpAddresses(self, s):
         """
@@ -61,6 +30,9 @@ class Solution:
                         continue
                     result.append(w1 + '.' + w2 + '.' + w3 + '.' + w4)
         return result
+if __name__ == "__main__":
+    ans = Solution().restoreIpAddresses("25525511135")
+    print(ans)
 
 # 5.2 验证IP地址
 # 编写一个函数来验证输入的字符串是否是有效的 IPv4 或 IPv6 地址。
