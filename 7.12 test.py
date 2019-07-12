@@ -99,7 +99,7 @@ class Solution():
         return res
         
 # 4.字符串转换整数
-class Solution(object):
+class Solution():
     def myAtoi(self, str):
         """
         :type str: str
