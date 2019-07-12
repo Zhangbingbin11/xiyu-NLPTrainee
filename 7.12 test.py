@@ -13,7 +13,7 @@ class Solution():
             if s[i].isdigit():
                 num = 0
                 while i < len(s) and s[i].isdigit():
-                    num = 10 * num + ord(s[i])
+                    num = 10 * num + ord(s[i])-ord('0')
                     i += 1
                 if op == '+':
                     stack.append(num)
