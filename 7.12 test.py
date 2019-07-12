@@ -8,7 +8,6 @@ class Solution():
         stack = []
         op = '+'
         i = 0
-        l=len(s)
         while i < len(s):
             if s[i].isdigit():
                 num = 0
