@@ -1,9 +1,6 @@
 
 # coding: utf-8
 
-# In[2]:
-
-
 import math
 import pandas as pd
 import numpy as np
@@ -20,10 +17,6 @@ df,textList, classVec = loadDataSet('train.tsv')
 df['textlist'] = textList
 print(textList,classVec)
 print(df['textlist'])
-
-
-# In[3]:
-
 
 # 根据词频选择部分词汇作为vocabulary
 def createVocabList(textList):
@@ -52,23 +45,14 @@ print(vocabList)
 print(len(vocabList))
 
 
-# In[4]:
-
-
 #将词汇表中单词编序号
 word_to_int = {word: i for i, word in enumerate(vocabList, start=1)}
 df['int_textlist'] = df['textlist'].apply(lambda l: [word_to_int[word] for word in l])
 df['int_textlist']
 
 
-# In[5]:
-
-
 max_len = df['int_textlist'].str.len().max()
 print(max_len)
-
-
-# In[6]:
 
 
 all_tokens = np.array([t for t in df['int_textlist']])
@@ -82,9 +66,6 @@ for i, row in enumerate(all_tokens):
 print(features[:3])
 
 
-# In[7]:
-
-
 from sklearn.model_selection import train_test_split
 train_features, test_features, train_labels, test_labels = train_test_split(
         features, encoded_labels, test_size=0.3, random_state=2)
@@ -93,7 +74,6 @@ print("train_features dim: "+ str(np.array(train_features).shape))
 print("test_features dim: "+ str(np.array(test_features).shape))
 
 
-# In[8]:
 
 
 import torch
@@ -115,19 +95,12 @@ print(len(train_loader))
 print(len(test_loader))
 
 
-# In[9]:
-
-
 # First checking if GPU is available
 train_on_gpu=torch.cuda.is_available()
 if(train_on_gpu):
     print('Training on GPU.')
 else:
     print('No GPU available, training on CPU.')
-
-
-# In[10]:
-
 
 class SentimentRNN(nn.Module):
     """RNN 文本分类"""
@@ -158,7 +131,6 @@ class SentimentRNN(nn.Module):
         """
         batch_size = x.size(0)
         # embeddings and lstm_out
-#         np.asscalar(np.int16(x))
         embeds = self.embedding(x)
         lstm_out, hidden = self.lstm(embeds, hidden)
         # transform lstm output to input size of linear layers
@@ -185,10 +157,6 @@ class SentimentRNN(nn.Module):
     
         return hidden
 
-
-# In[11]:
-
-
 # Instantiate the model w/ hyperparams
 vocab_size = len(word_to_int)+1 # +1 for the 0 padding
 output_size = 5       # 我们所需输出的大小，分类数(0,1,2,3,4)
@@ -199,9 +167,6 @@ n_layers = 2          # 网络中LSTM层的数量。通常在1-3之间
 net = SentimentRNN(vocab_size, output_size, embedding_dim, hidden_dim, n_layers)
 
 print(net)
-
-
-# In[12]:
 
 
 # loss and optimization functions
@@ -246,10 +211,6 @@ for e in range(epochs):
                   "Step: {}...".format(counter),
                   "Loss: {:.6f}...".format(loss.item()))
 
-
-# In[13]:
-
-
 # Get test data loss and accuracy
 test_losses = [] # track loss
 num_correct = 0
@@ -282,11 +243,8 @@ for inputs, labels in test_loader:
     correct = np.squeeze(correct_tensor.numpy()) if not train_on_gpu else np.squeeze(correct_tensor.cpu().numpy())
     num_correct += np.sum(correct)
 
-# -- stats! -- ##
-# avg test loss
 print("Test loss: {:.3f}".format(np.mean(test_losses)))
 
-# accuracy over all test data
 test_acc = num_correct/len(test_loader.dataset)
 print("Test accuracy: {:.3f}".format(test_acc))
 
