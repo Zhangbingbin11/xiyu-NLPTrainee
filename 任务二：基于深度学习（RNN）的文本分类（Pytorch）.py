@@ -115,8 +115,7 @@ class SentimentRNN(nn.Module):
         # linear
         self.fc = nn.Linear(hidden_dim, output_size)
         
-        # 前向传播的过程，首先embedding，然后通过LSTM层，线性层，最后通过一个 softmax函数
-        #输出结果，用于多分类
+
     def forward(self, x, hidden):
         """
         Perform a forward pass of our model on some input and hidden state.
