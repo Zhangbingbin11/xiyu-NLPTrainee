@@ -126,7 +126,6 @@ class SentimentRNN(nn.Module):
         lstm_out = torch.mean(lstm_out, dim=1)  # 针对第1维进行mean 的平均操作
         out = self.dropout(lstm_out)
         out = self.linear(out)        
-
         return out, hidden
     
     def init_hidden(self, batch_size):
