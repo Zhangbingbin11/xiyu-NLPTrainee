@@ -113,7 +113,7 @@ class SentimentRNN(nn.Module):
         # dropout layer
         self.dropout = nn.Dropout(0.3)
         # linear
-        self.fc = nn.Linear(hidden_dim, output_size)
+        self.linear = nn.Linear(hidden_dim, output_size)
         
 
     def forward(self, x, hidden):
@@ -123,11 +123,9 @@ class SentimentRNN(nn.Module):
         batch_size = x.size(0)
         embeds = self.embedding(x)
         lstm_out, hidden = self.lstm(embeds, hidden)
-        # transform lstm output to input size of linear layers
-        lstm_out = lstm_out.transpose(0,1)
-        lstm_out = lstm_out[-1]
+        lstm_out = torch.mean(lstm_out, dim=1)  # 针对第1维进行mean 的平均操作
         out = self.dropout(lstm_out)
-        out = self.fc(out)        
+        out = self.linear(out)        
 
         return out, hidden
     
