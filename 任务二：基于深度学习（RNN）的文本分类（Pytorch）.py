@@ -50,22 +50,20 @@ word_to_int = {word: i for i, word in enumerate(vocabList, start=1)}
 df['int_textlist'] = df['textlist'].apply(lambda l: [word_to_int[word] for word in l])
 df['int_textlist']
 
-
+#取最长句子长度
 max_len = df['int_textlist'].str.len().max()
 print(max_len)
 
-
+#将切分后的文本列表转换位索引列表
 all_tokens = np.array([t for t in df['int_textlist']])
 encoded_labels = np.array([l for l in df['Sentiment']])
-
-# Create blank rows
 features = np.zeros((len(all_tokens), max_len), dtype=int)
 # for each phrase, add zeros at the end 
 for i, row in enumerate(all_tokens):
     features[i, :len(row)] = row
 print(features[:3])
 
-
+#划分训练-测试集
 from sklearn.model_selection import train_test_split
 train_features, test_features, train_labels, test_labels = train_test_split(
         features, encoded_labels, test_size=0.3, random_state=2)
@@ -74,28 +72,22 @@ print("train_features dim: "+ str(np.array(train_features).shape))
 print("test_features dim: "+ str(np.array(test_features).shape))
 
 
-
-
 import torch
 import torch.nn as nn
 from torch.utils.data import TensorDataset, DataLoader
-# create Tensor datasets
+
+# 创建tensor data 
 train_data = TensorDataset(torch.LongTensor(train_features), torch.LongTensor(train_labels))
 test_data = TensorDataset(torch.LongTensor(test_features), torch.LongTensor(test_labels))
-
-# dataloaders
 batch_size =34
-
-# make sure the SHUFFLE your training data
-train_loader = DataLoader(train_data, shuffle=True, batch_size=batch_size)
+train_loader = DataLoader(train_data, shuffle=True, batch_size=batch_size)#shuffle:是否将数据打乱
 test_loader = DataLoader(test_data, shuffle=True, batch_size=batch_size)
-
 # Check the size of the loaders (how many batches inside)
 print(len(train_loader))
 print(len(test_loader))
 
 
-# First checking if GPU is available
+# checking if GPU is available
 train_on_gpu=torch.cuda.is_available()
 if(train_on_gpu):
     print('Training on GPU.')
@@ -123,20 +115,18 @@ class SentimentRNN(nn.Module):
         # linear
         self.fc = nn.Linear(hidden_dim, output_size)
         
-        # 前向传播的过程，很简单首先词嵌入(将词表示成向量)，然后通过LSTM层，线性层，最后通过一个 softmax函数
+        # 前向传播的过程，首先embedding，然后通过LSTM层，线性层，最后通过一个 softmax函数
         #输出结果，用于多分类
     def forward(self, x, hidden):
         """
         Perform a forward pass of our model on some input and hidden state.
         """
         batch_size = x.size(0)
-        # embeddings and lstm_out
         embeds = self.embedding(x)
         lstm_out, hidden = self.lstm(embeds, hidden)
         # transform lstm output to input size of linear layers
         lstm_out = lstm_out.transpose(0,1)
         lstm_out = lstm_out[-1]
-
         out = self.dropout(lstm_out)
         out = self.fc(out)        
 
@@ -144,7 +134,7 @@ class SentimentRNN(nn.Module):
     
     def init_hidden(self, batch_size):
         ''' Initializes hidden state '''
-        # Create two new tensors with sizes n_layers x batch_size x hidden_dim,
+        # Create two new tensors with sizes n_layers * batch_size * hidden_dim,
         # initialized to zero, for hidden state and cell state of LSTM
         weight = next(self.parameters()).data
         
