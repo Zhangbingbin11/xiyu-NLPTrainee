@@ -60,7 +60,7 @@ class BiLSTM(nn.Module):
     def __init__(self, input_size, hidden_size=300, dropout_rate=0.3, layer_num=1):
         super(BiLSTM, self).__init__()
         self.hidden_size = hidden_size
-        self.bilstm = nn.LSTM(input_size, hidden_size // 2, layer_num, batch_first=True, dropout=dropout_rate,bidirectional=True)
+        self.bilstm = nn.LSTM(input_size, hidden_size // 2, layer_num, batch_first=True, bidirectional=True)
 
         self.init_weights()
 
