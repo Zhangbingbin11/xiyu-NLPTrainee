@@ -30,7 +30,8 @@ def load_iters(batch_size=1, device="cpu", data_path='data'):
         filter_pred=lambda ex: ex.label != '-'  # filter the example which label is '-'(means unlabeled)
     )
 
-    TEXT.build_vocab(train, vectors=GloVe(name='6B', dim=300))
+    TEXT.build_vocab(train_data, vectors=GloVe(name='6B', dim=300))
+    LABEL.build_vocab(train_data)
     # TEXT.build_vocab(train_data, vectors=vectors, unk_init=torch.Tensor.normal_)
 
     train_iter, dev_iter = BucketIterator.splits(
